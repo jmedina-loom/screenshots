@@ -1,3 +1,7 @@
 .base-img {
   max-width: 1200px;
 }
+
+.editor-canvas {
+  width: 1200px;
+}
