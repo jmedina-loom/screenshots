@@ -1,8 +1,8 @@
 import "./util/styleUtils";
 import "./App.css";
 import styled from "@emotion/styled";
-import { Header } from "./components/header/Header";
-import { Editor } from "./components/editor/Editor";
+import { Header } from "./components/konva_spike/header/Header";
+import { Editor } from "./components/konva_spike/editor/Editor";
 
 const Wrapper = styled.div`
   height: 100vh;
