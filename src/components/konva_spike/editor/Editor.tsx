@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import screenshot from "../../assets/sample.png";
+import screenshot from "../../../assets/sample.png";
 import { Button, Icon, Spacer, Text } from "@loomhq/lens";
 import { SvgHighlightText } from "@loomhq/lens/icons/highlight-text";
 import { SvgCrop169 } from "@loomhq/lens/icons/crop169";

@@ -51,7 +51,7 @@ export function Header() {
         </IconWrapper>
         <Title>
           <Text size="large" fontWeight="bold">
-            May 22, 2024 2:14:53 pm - Screenshot
+            Konva Spike Screenshot
           </Text>
           <Text size="medium" fontWeight="book" color="bodyDimmed">
             Jose Medina - Just Now
