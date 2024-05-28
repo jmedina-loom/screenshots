@@ -1,7 +1,16 @@
 import styled from "@emotion/styled";
-import { Avatar, Button, IconButton, Logo, Text } from "@loomhq/lens";
+import {
+  Arrange,
+  Avatar,
+  Button,
+  Icon,
+  IconButton,
+  Logo,
+  Text,
+} from "@loomhq/lens";
 import { SvgBell } from "@loomhq/lens/icons/bell";
 import { SvgDownload } from "@loomhq/lens/icons/download";
+import { SvgLink } from "@loomhq/lens/icons/link";
 import { SvgMenu } from "@loomhq/lens/icons/menu";
 import { SvgSearch } from "@loomhq/lens/icons/search";
 import { SvgUsersAdd } from "@loomhq/lens/icons/users-add";
@@ -51,9 +60,27 @@ export function Header() {
       </TitleSection>
       <ActionSection>
         <Button icon={<SvgDownload />}>Download</Button>
-        <Button icon={<SvgUsersAdd />} variant="primary">
-          Share
-        </Button>
+        <Arrange gap="1px">
+          <Button
+            icon={<SvgUsersAdd />}
+            variant="primary"
+            style={{
+              borderRadius:
+                "var(--lns-radius-full) 0px 0px var(--lns-radius-full)",
+            }}
+          >
+            Share
+          </Button>
+          <Button
+            variant="primary"
+            style={{
+              borderRadius:
+                "0px var(--lns-radius-full) var(--lns-radius-full) 0px",
+            }}
+          >
+            <Icon icon={<SvgLink />} color="background"></Icon>
+          </Button>
+        </Arrange>
         <IconButton altText="Search" icon={<SvgSearch />}></IconButton>
         <IconButton altText="Notification" icon={<SvgBell />}></IconButton>
         <Avatar letter="JM" />
