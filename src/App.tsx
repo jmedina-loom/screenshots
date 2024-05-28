@@ -1,15 +1,20 @@
-import screenshot from "./assets/sample.png";
-
 import "./util/styleUtils";
 import "./App.css";
-import { Button } from "@loomhq/lens";
+import styled from "@emotion/styled";
+import { Header } from "./components/header/Header";
+import { Editor } from "./components/editor/Editor";
+
+const Wrapper = styled.div`
+  border: 1px solid blue;
+`;
 
 function App() {
   return (
-    <div>
-      <Button>Button</Button>
-      <img className="base-img" src={screenshot} alt="screenshot" />
-    </div>
+    <Wrapper>
+      <Header />
+
+      <Editor />
+    </Wrapper>
   );
 }
 
