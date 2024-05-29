@@ -1,7 +1,6 @@
 import * as React from "react";
 
 export function SvgHighlightText(props: React.SVGProps<SVGSVGElement>) {
-  console.log(props.color);
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
       <path
