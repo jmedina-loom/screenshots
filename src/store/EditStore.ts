@@ -12,7 +12,7 @@ interface EditState {
 }
 
 export const useEditStore = create<EditState>((set) => ({
-  editMode: EditMode.Arrow,
+  editMode: null,
   setEditMode(mode) {
     set({ editMode: mode });
   },

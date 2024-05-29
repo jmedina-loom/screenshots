@@ -8,6 +8,7 @@ import {
   Rect as KonvaRect,
   Arrow as KonvaArrow,
 } from "react-konva";
+import Konva from "konva";
 import useImage from "use-image";
 import { useStageResizer } from "../../common/UseResize";
 import { KonvaEventObject } from "konva/lib/Node";
@@ -17,6 +18,7 @@ import { EditMode, useEditStore } from "../../../store/EditStore";
 const ImageWrapper = styled.div`
   display: flex;
   justify-content: center;
+  position: relative;
   /* border: 1px solid blue; */
 `;
 
@@ -36,6 +38,7 @@ type Item =
       action: EditMode.Text;
       x: number;
       y: number;
+      text: string;
     }
   | {
       action: EditMode.Rectangle;
@@ -54,21 +57,60 @@ export function KonvaStage() {
   const { ref, stageDimensions } = useStageResizer();
   const [items, setItems] = useState<Item[]>([]);
   const [drawing, setDrawing] = useState(false);
+  const [editText, setEditText] = useState({
+    itemIndex: -1,
+    editing: false,
+    x: 0,
+    y: 0,
+    width: 0,
+    textValue: "",
+  });
 
   const onClick = useCallback(
     (e: KonvaEventObject<MouseEvent>) => {
+      if (editText.editing) {
+        // update the items first
+
+        setItems((prev) => {
+          const item = prev[editText.itemIndex];
+
+          if (item.action === EditMode.Text) {
+            item.text = editText.textValue;
+
+            const before = prev.slice(0, editText.itemIndex);
+            const after = prev.slice(editText.itemIndex + 1);
+
+            return [...before, item, ...after];
+          }
+
+          return prev;
+        });
+
+        setEditText({
+          itemIndex: -1,
+          editing: false,
+          x: 0,
+          y: 0,
+          width: 0,
+          textValue: "",
+        });
+        return;
+      }
+
       if (editMode === EditMode.Text) {
+        console.log("global click");
         setItems((prev) => [
           ...prev,
           {
             x: e.evt.layerX,
             y: e.evt.layerY,
+            text: "Some text on canvas",
             action: editMode,
           },
         ]);
       }
     },
-    [editMode]
+    [editText, editMode]
   );
 
   const onMouseDown = useCallback(
@@ -164,11 +206,41 @@ export function KonvaStage() {
   );
 
   const onMouseUp = useCallback(() => {
-    console.log("done drawing an arrow");
-    setDrawing(false);
-  }, []);
+    if (editMode === EditMode.Arrow || editMode === EditMode.Rectangle) {
+      console.log("done drawing");
+      setDrawing(false);
+    }
+  }, [editMode]);
 
-  console.log(items.length);
+  const onTextClick = useCallback(
+    (e: KonvaEventObject<MouseEvent>, itemIndex: number) => {
+      e.cancelBubble = true;
+
+      const target = e.target as Konva.Text;
+
+      console.log("text i am being clicked", e);
+      setEditText({
+        editing: true,
+        x: target.attrs.x + target.textWidth - 5,
+        y: target.attrs.y - 5,
+        width: target.textWidth + 20,
+        textValue: target.attrs.text,
+        itemIndex,
+      });
+
+      return false;
+    },
+    []
+  );
+
+  const onTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value;
+
+    setEditText((prev) => ({
+      ...prev,
+      textValue: value,
+    }));
+  };
 
   return (
     <ImageWrapper ref={ref} data-id="image-wrapper">
@@ -190,10 +262,11 @@ export function KonvaStage() {
               return (
                 <KonvaText
                   key={`text-${item.x}-${item.y}-${idx}`}
-                  text="Some text on canvas"
+                  text={item.text}
                   x={item.x}
                   y={item.y}
-                  fontSize={15}
+                  fontSize={25}
+                  onClick={(e) => onTextClick(e, idx)}
                 />
               );
             }
@@ -226,6 +299,19 @@ export function KonvaStage() {
           })}
         </Layer>
       </Stage>
+      <input
+        placeholder="Placeholder"
+        value={editText.textValue}
+        onChange={onTextChange}
+        style={{
+          position: "absolute",
+          width: `${editText.width}px`,
+          top: `${editText.y}px`,
+          left: `${editText.x}px`,
+          fontSize: "25px",
+          visibility: editText.editing ? "visible" : "hidden",
+        }}
+      />
     </ImageWrapper>
   );
 }
