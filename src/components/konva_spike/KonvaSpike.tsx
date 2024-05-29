@@ -1,11 +1,10 @@
 import { Editor } from "./editor/Editor";
-import { Header } from "./header/Header";
+import { Header } from "../common/Header";
 
 export function KonvaSpike() {
   return (
     <>
-      <Header />
-
+      <Header title="Konva Spike Screenshot" />
       <Editor />
     </>
   );

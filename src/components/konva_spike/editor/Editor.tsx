@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Spacer } from "@loomhq/lens";
-import { ActionButtons } from "./ActionButtons";
+import { ActionButtons } from "../../common/ActionButtons";
 import { KonvaStage } from "./KonvaStage";
 
 const Wrapper = styled.div`

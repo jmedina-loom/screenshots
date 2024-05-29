@@ -1,11 +1,10 @@
 import styled from "@emotion/styled";
 import screenshot from "../../../assets/sample.png";
-import { Image, Layer, Stage } from "react-konva";
+import { Image, Layer, Stage, Text as KonvaText } from "react-konva";
 import useImage from "use-image";
-import { useLayoutEffect, useRef, useState } from "react";
-
-const DEFAULT_WIDTH = 1200;
-const DEFAULT_HEIGHT = 744;
+import { useStageResizer } from "../../common/UseResize";
+import { KonvaEventObject } from "konva/lib/Node";
+import { useState } from "react";
 
 const ImageWrapper = styled.div`
   display: flex;
@@ -25,44 +24,42 @@ const ScreenshotImage = ({
 };
 
 export function KonvaStage() {
-  const [stageDimensions, setStageDimensions] = useState({
-    width: 1200,
-    height: 744,
-  });
-  const ref = useRef<HTMLDivElement | null>(null);
+  const { ref, stageDimensions } = useStageResizer();
+  const [textItems, setTextItems] = useState<{ x: number; y: number }[]>([]);
 
-  useLayoutEffect(() => {
-    const resizeHandler = () => {
-      if (!ref.current) {
-        return;
-      }
+  const onClick = (e: KonvaEventObject<MouseEvent>) => {
+    console.log(e);
 
-      const sceneWidth = DEFAULT_WIDTH;
-      const containerWidth = Math.min(sceneWidth, ref.current.offsetWidth);
-      const sceneHeight = DEFAULT_HEIGHT;
-      const scale = containerWidth / sceneWidth;
-
-      setStageDimensions(() => ({
-        width: sceneWidth * scale,
-        height: sceneHeight * scale,
-      }));
-    };
-
-    window.addEventListener("resize", resizeHandler);
-
-    return () => {
-      window.removeEventListener("resize", resizeHandler);
-    };
-  }, []);
+    setTextItems((prev) => [
+      ...prev,
+      {
+        x: e.evt.layerX,
+        y: e.evt.layerY,
+      },
+    ]);
+  };
 
   return (
     <ImageWrapper ref={ref} data-id="image-wrapper">
-      <Stage width={stageDimensions.width} height={stageDimensions.height}>
+      <Stage
+        width={stageDimensions.width}
+        height={stageDimensions.height}
+        onClick={onClick}
+      >
         <Layer>
           <ScreenshotImage
             width={stageDimensions.width}
             height={stageDimensions.height}
           />
+          {textItems.map(({ x, y }, idx) => (
+            <KonvaText
+              key={`text-${x}-${y}-${idx}`}
+              text="Some text on canvas"
+              x={x}
+              y={y}
+              fontSize={15}
+            />
+          ))}
         </Layer>
       </Stage>
     </ImageWrapper>

@@ -41,7 +41,7 @@ const ActionSection = styled.div`
   gap: 16px;
 `;
 
-export function Header() {
+export function Header({ title }: { title: string }) {
   return (
     <Wrapper data-id="header-wrapper">
       <TitleSection>
@@ -51,7 +51,7 @@ export function Header() {
         </IconWrapper>
         <Title>
           <Text size="large" fontWeight="bold">
-            Fiber Spike Screenshot
+            {title}
           </Text>
           <Text size="medium" fontWeight="book" color="bodyDimmed">
             Jose Medina - Just Now
