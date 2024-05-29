@@ -93,8 +93,6 @@ const ActionButtonContainer = ({
 }) => {
   const { editMode, setEditMode } = useEditStore();
 
-  console.log({ editMode });
-
   const onModeClick = useCallback(
     (mode: EditMode) => () => setEditMode(mode),
     [setEditMode]
