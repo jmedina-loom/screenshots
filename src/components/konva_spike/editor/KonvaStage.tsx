@@ -12,8 +12,9 @@ import Konva from "konva";
 import useImage from "use-image";
 import { useStageResizer } from "../../common/UseResize";
 import { KonvaEventObject } from "konva/lib/Node";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { EditMode, useEditStore } from "../../../store/EditStore";
+import { useDownloadImage } from "../../common/UseDownload";
 
 const ImageWrapper = styled.div`
   display: flex;
@@ -54,6 +55,8 @@ type Item =
 
 export function KonvaStage() {
   const { editMode } = useEditStore();
+  const stageRef = useRef<Konva.Stage>();
+  useDownloadImage(stageRef);
   const { ref, stageDimensions } = useStageResizer();
   const [items, setItems] = useState<Item[]>([]);
   const [drawing, setDrawing] = useState(false);
@@ -217,13 +220,29 @@ export function KonvaStage() {
       e.cancelBubble = true;
 
       const target = e.target as Konva.Text;
+      // const evt = e.evt;
+
+      const textPosition = target.getAbsolutePosition();
+      const stageBox = stageRef.current?.container().getBoundingClientRect();
+
+      if (!stageBox) {
+        console.log("unable to edit text");
+        return;
+      }
+
+      const areaPosition = {
+        x: stageBox.left + textPosition.x,
+        y: textPosition.y,
+      };
+
+      console.log(areaPosition);
 
       console.log("text i am being clicked", e);
       setEditText({
         editing: true,
-        x: target.attrs.x + target.textWidth - 5,
-        y: target.attrs.y - 5,
-        width: target.textWidth + 20,
+        x: areaPosition.x,
+        y: areaPosition.y - 5,
+        width: target.width() + 10,
         textValue: target.attrs.text,
         itemIndex,
       });
@@ -245,6 +264,7 @@ export function KonvaStage() {
   return (
     <ImageWrapper ref={ref} data-id="image-wrapper">
       <Stage
+        ref={stageRef as never}
         width={stageDimensions.width}
         height={stageDimensions.height}
         onClick={onClick}

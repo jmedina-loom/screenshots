@@ -68,7 +68,7 @@ export function Header({ title }: { title: string }) {
 }
 
 function Actions() {
-  const { editMode, setEditMode } = useEditStore();
+  const { editMode, setEditMode, setDownloadImg } = useEditStore();
 
   if (editMode) {
     return (
@@ -100,7 +100,9 @@ function Actions() {
 
   return (
     <ActionSection>
-      <Button icon={<SvgDownload />}>Download</Button>
+      <Button icon={<SvgDownload />} onClick={() => setDownloadImg(true)}>
+        Download
+      </Button>
       <Arrange gap="1px">
         <Button
           icon={<SvgUsersAdd />}

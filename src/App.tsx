@@ -27,7 +27,11 @@ function getInitialPage(): "konva" | "fiber" {
 
   const page = params.get("page");
 
-  return page === "fiber" ? "fiber" : "konva";
+  if (page === "fiber") return "fiber";
+
+  if (page === "konva") return "konva";
+
+  return "konva";
 }
 
 export default App;
